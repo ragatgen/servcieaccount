@@ -22,3 +22,8 @@ roleRef:
  kind: Role
  name: role-test-account
  apiGroup: rbac.authorization.k8s.io
+
+
+
+Test the changes made
+k auth can-i get pods -n=dev --as=system:serviceaccount:dev:default 
