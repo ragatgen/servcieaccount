@@ -1,28 +1,40 @@
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
 metadata:
- namespace: test
- name: role-test-account
+  creationTimestamp: null
+  name: foo-role
+  namespace: foo
 rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-  
-  
-  kind: RoleBinding
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+
 apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
 metadata:
- name: role-test-account-binding
- namespace: test
+  creationTimestamp: null
+  name: test-foo
+  namespace: foo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: foo-role
 subjects:
 - kind: ServiceAccount
-  name: test-account
-  namespace: test
-roleRef:
- kind: Role
- name: role-test-account
- apiGroup: rbac.authorization.k8s.io
+  name: default
+  namespace: foo
 
+
+k delete ns dev
+k create ns dev 
+k create role defaullist --resource=pods --verb=list --verb=get -n=foo
+k create rolebinding defaultbinding --role=defaullist --serviceaccount=foo:default -n=foo # right syntax 
+k auth can-i get pods -n=foo --as=system:serviceaccount:foo:default  # right syntax
+# yes
 
 
 Test the changes made
